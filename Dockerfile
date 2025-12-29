@@ -1,13 +1,11 @@
 FROM ghcr.io/sillytavern/sillytavern:latest
 
-# 1. Create directories and FIX PERMISSIONS (Crucial!)
-# We switch to root to make the folders, then give them to the 'node' user
+# 1. Switch to Root to bypass all permission errors
 USER root
-RUN mkdir -p /home/node/app/config /home/node/app/data && \
-    chown -R node:node /home/node/app/config /home/node/app/data
 
-# 2. Switch back to the safe user
-USER node
+# 2. Create the directories
+RUN mkdir -p /home/node/app/config /home/node/app/data
 
 # 3. Start the server
+# We rely on the Zeabur Environment Variables for the password/port settings
 CMD ["node", "server.js", "--configPath", "/home/node/app/config/config.yaml", "--dataRoot", "/home/node/app/data"]
